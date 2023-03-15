@@ -1,7 +1,28 @@
 view all departments, 
 view all roles, 
+mysql> source query.sql
++-----------------------------------+-----------------+
+| job_title                         | department      |
++-----------------------------------+-----------------+
+| swiper                            | logistics       |
+| assistant to the regional manager | sales           |
+| pencil pusher                     | human resources |
++----------------------------------
 view all employees, 
 add a department, 
 add a role, 
 add an employee, 
 and update an employee role
+
+
+try to add some additional functionality to your application, such as the ability to do the following:
+
+Update employee managers.
+
+View employees by manager.
+
+View employees by department.
+
+Delete departments, roles, and employees.
+
+View the total utilized budget of a department—in other words, the combined salaries of all employees in that department.

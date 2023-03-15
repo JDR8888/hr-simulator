@@ -15,38 +15,32 @@ connection.connect((err) => {
     console.log('Connected!');
   });
 
+// define the set of primary options to display to the user while navigating the app in the terminal.
 const options = [
     {
-        value: "view all departments",
-        num: "1"
+        value: "view all departments", 
     },
     {
         value: "view all roles",
-        num: "2"
     },
     {
         value: "view all employees",
-        num: "3"
     },
     {
         value: "add a department",
-        num: "4"
     },
     {
         value: "add a role",
-        num: "5"
     },
     {
         value: "add an employee",
-        num: "6"
     },
     {
         value: "update an employee role",
-        num: "7"
     }
 ];
 
-  inquirer.prompt(
+inquirer.prompt(
     {
     type:'list',
     message: "omg what do you want",
@@ -54,22 +48,26 @@ const options = [
     name: "desire"
     },
   ).then((answers) => {
-    // let val = answers.desire.num;
-    console.log(`you chose ${answers.value}`);
-    // console.log(answers.desire.num);
-    const table = 'department';
-//   connection.query(
-//     `SELECT * FROM ${table}`, function(err,results,fields) {
-//         console.table(results);
-//     }
-//   );
+    let table;
+    // let val = answers;
+    switch (answers.desire) {
+        case "view all departments":
+            table = 'department';
+            break;
+        case "view all roles":
+            table = 'role';
+            break;
+        case "view all employees":
+            table = 'employee';
+            break;
+    }
+    // console.log(choices[0]);
+    // const table = 'department';
+    connection.query(
+      `SELECT * FROM ${table}`, function(err,results,fields) {
+        console.log(`\x1b[35m here is your results \x1b[0m`)
+        console.table(results);
+    }
+  );
   });
 
-
-// connection.query(
-//     'SELECT * FROM `table` WHERE `name` = ? AND `age` > ?',
-//     ['Page', 45],
-//     function(err, results) {
-//       console.log(results);
-//     }
-//   );

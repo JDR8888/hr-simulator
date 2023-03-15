@@ -37,7 +37,7 @@ demo of the project:
 # Installation
 N/A
 # Usage
-N/A
+Download/clone the repo. npm install the packages/libraries needed, open up your terminal inside the repo, and enter 'node index.js'
 # Credits   
   [![forthebadge](https://forthebadge.com/images/badges/uses-badges.svg)](https://forthebadge.com) 
   inquire.js , node.js, console table, node-mysql2
