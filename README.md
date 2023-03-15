@@ -2,7 +2,7 @@
 [![forthebadge](https://forthebadge.com/images/badges/powered-by-coffee.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/uses-js.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/gluten-free.svg)](https://forthebadge.com) 
 
 ## Description
-A simple command-line app with mysql functionality 
+A simple command-line app with mysql functionality that allows the user to interact with a database for a simulated company. easily sort by departments, employees, etc. - want to feel the power of an HR exec? you have the ability to add employees, add entire job descriptions, change salaries, fire people. just name your desire and we'll guide you through it. 
 
 Made from scratch using the following acceptance criteria from Columbia University's Fullstack Bootcamp:
 ```
@@ -27,7 +27,7 @@ THEN I am prompted to select an employee to update and their new role and this i
 ```
 
 
-The github repo is @ https://github.com/JDR8888/  
+The github repo is @ https://github.com/JDR8888/hr-simulator
 
 demo of the project:
 
