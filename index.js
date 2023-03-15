@@ -1,27 +1,19 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
+require('dotenv').config();
 
 const connection = mysql.createConnection( {
     host: 'localhost',
-    user: 'root',
-    database: 'company_db',
-    password: 'Oushy2023.'
+    user: process.env.DB_USER,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD
 });
 
 connection.connect((err) => {
     if (err) throw err;
     console.log('Connected!');
   });
-
-//   const table = 'department';
-//   connection.query(
-//     `SELECT * FROM ${table}`, function(err,results,fields) {
-//         console.table(results)
-//     }
-//   );
-
-
 
 const options = [
     {
