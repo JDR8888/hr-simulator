@@ -13,8 +13,8 @@ values ("swiper", 69420, 1),
 insert into employee 
 (first_name, last_name, role_id, manager_id)
 values
-("baba", "booey", 1, 2),
-("dwight","schrute", 2, 2);
+("baba", "booey", 1, 3),
+("dwight","schrute", 2, 3);
 
 insert into employee 
 (first_name, last_name, role_id)

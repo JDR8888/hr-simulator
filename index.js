@@ -3,6 +3,7 @@ const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
 require('dotenv').config();
+const {employeeeQuery, roleQuery} = require('./dbFunctions.js'); 
 //establish connection w/mysql2
 const connection = mysql.createConnection( {
     host: 'localhost',
@@ -37,8 +38,11 @@ const mainOptions = [
     { value: "UPDATE EXISTING DATA"}
  ];
 
- //define the main prompt function that will run on startup and be referred back to throughout
+ 
+// define sql query that will be used to return employee list showing position title, department, salaray, manager name, etc
+ 
 
+ //define the main prompt function that will run on startup and be referred back to throughout
 function mainPrompt() {
 inquirer.prompt(
     {
@@ -48,7 +52,7 @@ inquirer.prompt(
     name: "desire"
     },
   ).then((answers) => {
-    if (answers = "HR VIEW") {
+    if (answers = "VIEW TABLES") {
         inquirer.prompt(
             {
                 type:'list',
@@ -65,6 +69,7 @@ inquirer.prompt(
      
   });
 } //end my start function
+
 mainPrompt();
 
 function viewTable(tableChoice) {
@@ -73,15 +78,30 @@ function viewTable(tableChoice) {
             connection.query(
                 `SELECT * FROM ${tableChoice}`, function(err,results,fields) {
                   console.log('\x1b[35m here is list of our departments \x1b[0m')
-                  console.table(results); });
+                  console.table(results);
+                  console.log('--------------------------------------------------');
+                  console.log('OK, what next?')
+                  mainPrompt();
+                 });
             break;
         case "role":
             connection.query(
-                `select role.title as job_title, department.name as department from role join department on role.department_id = department.id`, function(err, results, fields) {
+                roleQuery, function(err, results, fields) {
                     console.log("\x1b[35m here is list of the company's positions and their respective departments \x1b[0m")
                     console.table(results);
+                    console.log('--------------------------------------------------');
+                    console.log('OK, what next?')
+                    mainPrompt();
                 });
             break;
-    }//.then(() => {console.log('looks great huh?') 
-    //mainPrompt();
+        case "employee":
+            connection.query(
+                employeeeQuery, function(err, results, fields) {
+                    console.log("\x1b[35m here is list of our wonderful employees and information regarding them \x1b[0m")
+                    console.table(results);
+                    console.log('--------------------------------------------------');
+                    console.log('OK, what next?')
+                    mainPrompt();
+                });
+    }
 };
