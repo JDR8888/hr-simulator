@@ -4,6 +4,7 @@ const mysql = require('mysql2');
 const cTable = require('console.table');
 require('dotenv').config();
 //establish connection w/mysql2
+// ENTER MYSQL LOGIN INFO BELOW
 const connection = mysql.createConnection( {
     host: 'localhost',
     user: process.env.DB_USER,
@@ -89,13 +90,13 @@ function mainPrompt() {
                 },).then((answers) => {
                     switch (answers.viewChoice) {
                       case "department":
-                        addDepartment();  
+                        addDepartment();  //if they chose dept run addDept function
                         break;
                       case "role":
-                        addRole();
+                        addRole(); //if chose role, run addRole function
                         break;
                       case "employee":
-                        addEmployee();
+                        addEmployee(); //if chose emp run addEmployee func
                     };
                 }) //end .then statement
 
@@ -117,7 +118,7 @@ function viewTable(tableChoice) {
                   console.log('\x1b[35m here is list of our departments \x1b[0m')
                   console.table(results);
                   console.log('--------------------------------------------------');
-                  console.log('OK, what next?')
+                  console.log("\x1b[33m OK, what next? \x1b[0m")
                   mainPrompt();
                  });
             break;
@@ -127,7 +128,7 @@ function viewTable(tableChoice) {
                     console.log("\x1b[35m here is list of the company's positions and their respective departments \x1b[0m")
                     console.table(results);
                     console.log('--------------------------------------------------');
-                    console.log('OK, what next?')
+                    console.log("\x1b[33m OK, what next? \x1b[0m")
                     mainPrompt();
                 });
             break;
@@ -137,7 +138,7 @@ function viewTable(tableChoice) {
                     console.log("\x1b[35m here is list of our wonderful employees and information regarding them \x1b[0m")
                     console.table(results);
                     console.log('--------------------------------------------------');
-                    console.log('OK, what next?')
+                    console.log("\x1b[33m OK, what next? \x1b[0m")
                     mainPrompt();
                 });
     }
@@ -152,8 +153,39 @@ function addDepartment() {
         },).then((answers) => {
             connection.query(
                 `insert into department (name) values ("${answers.newDept}");`, function(err, results, fields) {
-                    console.log("\x1b[35m if you didn't type something stupid your dept name will be added. go and view departments to see if it is added to the list. \x1b[0m")
+                    console.log("\x1b[33m if you didn't type something stupid your dept name will be added. go and view departments to see if it is added to the list. \x1b[0m")
                     mainPrompt();
         }); 
     });
+};
+
+function addRole() {
+    connection.query(
+        `SELECT * FROM department`, function(err,results,fields) {
+          console.log('\x1b[35m here is the department list with IDs \x1b[0m')
+          console.table(results);
+    inquirer.prompt( [
+        {
+            type: "input",
+            message: "what is the title of this new role?",
+            name: "roleTitle"            
+        },
+        {
+            type: "input",
+            message: "what is the annual salary of this new role? please enter only digits with no commas or symbols",
+            name: "roleSalary"            
+        },
+        {
+            type: "input",
+            message: "what is the numerical ID for the department that this role will belong to? see the table directly above for dept IDs",
+            name: "roleDept"            
+        },]
+        ).then((answers) => {
+            connection.query(
+                `insert into role (title, salary, department_id) values ("${answers.roleTitle}",${answers.roleSalary}, ${answers.roleDept});`, function(err, results, fields) {
+                    console.log("\x1b[33m if you managed to follow the directions the new role will be added. kthx. \x1b[0m")
+                    mainPrompt();
+        }); 
+    });
+});
 };

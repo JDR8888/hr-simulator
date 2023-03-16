@@ -26,6 +26,18 @@ THEN I am prompted to select an employee to update and their new role and this i
 
 ```
 
+## INSTRUCTIONS
+```
+ after cloning the repo, run "npm i" to set up the necessary modules. 
+ in the db subdirectory open up a mysql terminal, and run schema.sql, then seeds.sql 
+ (type "source schema.sql" hit enter, then type "source seeds.sql" and hit enter) to set up your db before running. 
+ in lines 10 through 12 of index.js you will need to enter your mysql login information. 
+ the database name is "company_db" --> this can be found in schema.sql
+ Once you have take care of the npm stuff and set up and seeded the db with the mysql files, open a terminal in the main directory and type "node index"
+ after that, use the arrow keys to navigate the prompts.
+ Have fun!
+```
+
 
 The github repo is @ https://github.com/JDR8888/hr-simulator
 
@@ -37,7 +49,7 @@ demo of the project:
 # Installation
 N/A
 # Usage
-Download/clone the repo. npm install the packages/libraries needed, open up your terminal inside the repo, and enter 'node index.js'
+N/A
 # Credits   
   [![forthebadge](https://forthebadge.com/images/badges/uses-badges.svg)](https://forthebadge.com) 
   inquire.js , node.js, console table, node-mysql2
