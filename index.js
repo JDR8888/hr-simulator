@@ -57,8 +57,25 @@ role.department_id = department.id;`;
 //sql query that will return role information using join with dept table
 const roleQuery = "select role.title as job_title, role.salary as salary, department.name as department from role join department on role.department_id = department.id";
 
- //THIS IS WHERE THE ACTION STARTS
- //define the main prompt function that will run on startup and be referred back to throughout
+//prompt questions for creating a new role
+const roleQuestions = [
+    {
+        type: "input",
+        message: "what is the title of this new role?",
+        name: "roleTitle"            
+    },
+    {
+        type: "input",
+        message: "what is the annual salary of this new role? please enter only digits with no commas or symbols",
+        name: "roleSalary"            
+    },
+    {
+        type: "input",
+        message: "what is the numerical ID for the department that this role will belong to? see the table directly above for dept IDs",
+        name: "roleDept"            
+    },];
+
+ //THIS FUNCTION IS WHERE THE ACTION STARTS and is what is referred back to after every other function. keeping things a bit cleaner for the user but having just 3 main functions/choices for the first prompt that will then be expanded upon for more specific choices.
 function mainPrompt() {
   inquirer.prompt(
       {
@@ -108,7 +125,8 @@ function mainPrompt() {
      });
 }; //end my start function
 
-mainPrompt();
+mainPrompt(); //we want the main function/prompt to happen after opening index.js
+
 //function to view formatted table with formatting/specific query based on which table is chosen
 function viewTable(tableChoice) {
     switch (tableChoice){
@@ -164,22 +182,7 @@ function addRole() {
         `SELECT * FROM department`, function(err,results,fields) {
           console.log('\x1b[35m here is the department list with IDs \x1b[0m')
           console.table(results);
-    inquirer.prompt( [
-        {
-            type: "input",
-            message: "what is the title of this new role?",
-            name: "roleTitle"            
-        },
-        {
-            type: "input",
-            message: "what is the annual salary of this new role? please enter only digits with no commas or symbols",
-            name: "roleSalary"            
-        },
-        {
-            type: "input",
-            message: "what is the numerical ID for the department that this role will belong to? see the table directly above for dept IDs",
-            name: "roleDept"            
-        },]
+    inquirer.prompt( roleQuestions
         ).then((answers) => {
             connection.query(
                 `insert into role (title, salary, department_id) values ("${answers.roleTitle}",${answers.roleSalary}, ${answers.roleDept});`, function(err, results, fields) {
