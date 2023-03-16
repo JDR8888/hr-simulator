@@ -18,7 +18,7 @@ connection.connect((err) => {
   });
 
 //greet the user with some goddamn hospitality and show 'em around the place
-console.log('\x1b[35m welcome to HR Simulator 42!! \x1b[0m'); //using \x1b escape char for colored console logs
+console.log('\x1b[35m welcome to the HR Simulator!!! \x1b[0m'); //using \x1b escape char for colored console logs
 console.log('\x1b[33m ready to feel like an HR god? \x1b[0m');
 
 // define the set of primary options to display to the user while navigating the app in the terminal.
