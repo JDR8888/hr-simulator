@@ -32,10 +32,10 @@ const options = [
 ];
 // define the set of primary options to display to the user while navigating the app in the terminal.
 const mainOptions = [
-    { value: "VIEW TABLES"},
-    { value: "ADD SOMETHING NEW"},
-    { value: "UPDATE EXISTING DATA"}
- ];
+    { value: "VIEW TABLES",},
+    { value: "ADD SOMETHING NEW",},
+    { value: "UPDATE EXISTING DATA",},
+    ];
 
  
 // define sql query that will be used to return employee list showing position title, department, salaray, manager name, etc
@@ -54,39 +54,61 @@ join department on
 role.department_id = department.id;`;
 
 //sql query that will return role information using join with dept table
-const roleQuery = `select role.title as job_title, role.salary as salary, department.name as department from role join department on role.department_id = department.id`;
+const roleQuery = "select role.title as job_title, role.salary as salary, department.name as department from role join department on role.department_id = department.id";
 
  //THIS IS WHERE THE ACTION STARTS
  //define the main prompt function that will run on startup and be referred back to throughout
 function mainPrompt() {
-inquirer.prompt(
-    {
-    type:'list',
-    message: "Tell us what your heart desires",
-    choices: mainOptions,
-    name: "desire"
-    },
-  ).then((answers) => {
-    if (answers = "VIEW TABLES") {
-        inquirer.prompt(
-            {
-                type:'list',
-                message:'we can sort results 3 ways, what would you like to view?',
-                choices: options,
-                name: "viewChoice"
-            },).then((answers) => {
-                console.log('\x1b[35m ok here you go \x1b[0m')
-                console.log(answers.viewChoice)
-                viewTable(answers.viewChoice);
-            }) //end .then statement
-        
-    } // end if statement 
+  inquirer.prompt(
+      {
+      type:'list',
+      message: "Tell us what your heart desires",
+      choices: mainOptions,
+      name: "desire"
+      },
+    ).then((answers) => {
+      if (answers.desire == "VIEW TABLES") {
+          inquirer.prompt(
+                {
+                    type:'list',
+                    message:'we can sort results 3 ways, what would you like to view?',
+                    choices: options,
+                    name: "viewChoice"
+                },).then((answers) => {
+                    viewTable(answers.viewChoice);
+                }) //end .then statement
+            
+        } // next is the function if they want to add something
+        else if (answers.desire == "ADD SOMETHING NEW") {
+            inquirer.prompt(
+                {
+                    type:'list',
+                    message:'to which table what would you like to add something?',
+                    choices: options,
+                    name: "viewChoice"
+                },).then((answers) => {
+                    switch (answers.viewChoice) {
+                      case "department":
+                        addDepartment();  
+                        break;
+                      case "role":
+                        addRole();
+                        break;
+                      case "employee":
+                        addEmployee();
+                    };
+                }) //end .then statement
+
+        } // next check if answer is to update something
+        else if (answers.desire = "UPDATE EXISTING DATA") {
+
+        }
      
-  });
-} //end my start function
+     });
+}; //end my start function
 
 mainPrompt();
-
+//function to view formatted table with formatting/specific query based on which table is chosen
 function viewTable(tableChoice) {
     switch (tableChoice){
         case "department":
@@ -119,4 +141,19 @@ function viewTable(tableChoice) {
                     mainPrompt();
                 });
     }
+};
+//if the user chose to add a dept, will prompt for dept name and run the sql query to add the dept
+function addDepartment() {
+    inquirer.prompt(
+        {
+            type: "input",
+            message: "what is the name of the new department?",
+            name: "newDept"            
+        },).then((answers) => {
+            connection.query(
+                `insert into department (name) values ("${answers.newDept}");`, function(err, results, fields) {
+                    console.log("\x1b[35m if you didn't type something stupid your dept name will be added. go and view departments to see if it is added to the list. \x1b[0m")
+                    mainPrompt();
+        }); 
+    });
 };
