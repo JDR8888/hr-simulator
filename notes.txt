@@ -1,13 +1,5 @@
-view all departments, 
-view all roles, 
-mysql> source query.sql
-+-----------------------------------+-----------------+
-| job_title                         | department      |
-+-----------------------------------+-----------------+
-| swiper                            | logistics       |
-| assistant to the regional manager | sales           |
-| pencil pusher                     | human resources |
-+----------------------------------
+- view all departments, 
+- view all roles, 
 view all employees, 
 add a department, 
 add a role, 
@@ -26,3 +18,11 @@ View employees by department.
 Delete departments, roles, and employees.
 
 View the total utilized budget of a department—in other words, the combined salaries of all employees in that department.
+
++-----------------------------------+-----------------+
+| job_title                         | department      |
++-----------------------------------+-----------------+
+| swiper                            | logistics       |
+| assistant to the regional manager | sales           |
+| pencil pusher                     | human resources |
++----------------------------------
