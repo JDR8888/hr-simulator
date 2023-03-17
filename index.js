@@ -30,18 +30,12 @@ const mainOptions = [
 
 // list of basic choices for viewing and adding
 const options = [
-    {
-        value: "department",
-    },
-    {
-        value: "role",
-    },
-    {
-        value: "employee",
-    },
+    { value: "department",},
+    { value: "role",},
+    { value: "employee",},
 ];
 
- //THIS FUNCTION IS WHERE THE ACTION STARTS and is what is referred back to after every other function. keeping things a bit cleaner for the user but having just 3 main functions/choices for the first prompt that will then be expanded upon for more specific choices.
+ //THIS FUNCTION IS WHERE THE ACTION STARTS and is what is referred back to after every other function. keeping things a bit cleaner for the user by having just 3 main functions/choices for the first prompt that will then be expanded upon for more specific choices.
 function mainPrompt() {
   inquirer.prompt(
       {
@@ -84,10 +78,9 @@ function mainPrompt() {
                 }) //end .then statement
 
         } // next check if answer is to update something
-        else if (answers.desire = "UPDATE EXISTING DATA") {
-
+        else if (answers.desire == "UPDATE EXISTING DATA") {
+            updateEmployee();
         }
-     
      });
 }; //end my start function
 
@@ -128,6 +121,36 @@ const roleQuestions = [
         message: "what is the numerical ID for the department that this role will belong to? see the table directly above for dept IDs",
         name: "roleDept"            
     },];
+
+    
+const theEmployeeQuestions = [
+    {
+        type: "input",
+        message: "what is the first name of this person?",
+        name: "fname"            
+    },
+    {
+        type: "input",
+        message: "what is their last name?",
+        name: "lname"            
+    },
+    {
+        type: "input",
+        message: "reference the ROLE table directly above and find the ROLE ID (number) for the role you'd like to assign this person to. Type only that number and hit enter",
+        name: "role_id"            
+    },
+];
+
+//this will be pushed into the question set for addEmployee IF the user chooses to add a manager
+const managerQuestion = {
+    type: "input",
+    message: "Finally, since you want to assign a manager, please enter the EMPLOYEE ID of the EMPLOYEE that you wnat to be the MANAGER of this new employee. Above the dept table and role table is the list of current employees with their IDs",
+    name: "manager_id"  
+};
+//query string for adding an employee that has a manager
+// const employeeWithManager = `insert into employee (first_name, last_name, role_id, manager_id) values ("${answers.fname}","${answers.lname}", ${answers.role_id}, ${answers.manager_id});`;
+// // //query string for adding employee w/out manager
+// const employeeWithoutManager = `insert into employee (first_name, last_name, role_id) values ("${answers.fname}","${answers.lname}", ${answers.role_id});`;
 
 //function to view formatted table with formatting/specific query based on which table is chosen
 function viewTable(tableChoice) {
@@ -196,5 +219,52 @@ function addRole() {
 };
 
 function addEmployee() {
-    //ask if they want to add a manager --> then set prompt questions accordingly and set the insert string accordingly --> if yes will need to prompt for the employee id of their manager (can show employeee table at the beginning of this table as a reference) and then include that in the params. if not, don't include manager_id in params/values
-}
+    console.log('-------------------------------------------------');
+    getTable('employee'); //showing basic tables for referencing when answering prompts
+    getTable('role');
+    inquirer.prompt( 
+        {
+        type:'list',
+        message:'do you want to assign a manager to this new employee???',
+        choices: [ {value: "yes",}, {value: "no",}],
+        name: "hasManager"
+    },).then((answers) => {
+        if (answers.hasManager == "yes") {
+            
+            console.log("\x1b[35m here are the tables you will need to reference. press down to continue. \x1b[0m")
+            let employeeQuestions = theEmployeeQuestions;
+            employeeQuestions.push(managerQuestion);
+            inquirer.prompt(
+                employeeQuestions,
+            ).then((answers) => {
+                connection.query(
+                    `insert into employee (first_name, last_name, role_id, manager_id) values ("${answers.fname}","${answers.lname}", ${answers.role_id}, ${answers.manager_id});`, function(err, results, fields) {
+                        console.log("\x1b[33m your new employee should be added. \x1b[0m")
+                        mainPrompt();
+                }); 
+        })} //ends .then and if statement
+        else if (answers.hasManager == "no") {
+            getTable('role');
+            inquirer.prompt(
+                theEmployeeQuestions,
+            ).then((answers) => {
+                connection.query(
+                    `insert into employee (first_name, last_name, role_id) values ("${answers.fname}","${answers.lname}", ${answers.role_id});`, function(err, results, fields) {
+                        console.log("\x1b[33m your new employee should be added. \x1b[0m")
+                        mainPrompt();
+                }); 
+        })};
+});
+};
+
+function updateEmployee() {
+    //if user chooses to update something
+};
+
+function getTable(table) { //just a quick show of the table
+    connection.query(
+        `select * from ${table}`, function(err, results, fields) {
+            console.table(results);
+        });
+    return;
+};
