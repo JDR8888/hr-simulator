@@ -41,9 +41,8 @@ THEN I am prompted to select an employee to update and their new role and this i
 
 The github repo is @ https://github.com/JDR8888/hr-simulator
 
-demo of the project:
+demo of the project: video link @ https://drive.google.com/file/d/1ZRZQ1oFwITjAaianimc6EeOCJ77FCPL4/view 
 
-![screenshot of project]()
 
 
 # Installation
