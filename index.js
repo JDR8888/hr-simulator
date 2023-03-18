@@ -35,7 +35,7 @@ const options = [
     { value: "employee",},
 ];
 
- //THIS FUNCTION IS WHERE THE ACTION STARTS and is what is referred back to after every other function. keeping things a bit cleaner for the user by having just 3 main functions/choices for the first prompt that will then be expanded upon for more specific choices.
+ //THIS FUNCTION IS WHERE THE ACTION STARTS and is what is referred back to after other functions so that the user can just keep doing things without having to restart the app or getting trapped in a function. keeping things a bit cleaner for the user by having just 3 main functions/choices for the first prompt that will then be expanded upon for more specific choices.
 function mainPrompt() {
   inquirer.prompt(
       {
@@ -218,6 +218,7 @@ function addRole() {
 });
 };
 
+// function called if user chooses to add an employee (will filter results based on whether they want to add a manager for the new employee)
 function addEmployee() {
     console.log('-------------------------------------------------');
     getTable('employee'); //showing basic tables for referencing when answering prompts
@@ -258,8 +259,19 @@ function addEmployee() {
 };
 
 function updateEmployee() {
-    //if user chooses to update something
+    employee = chooseEmployee();
+    // console.log('hi' + employee);
+    // getTable('employee');
+    // console.log("\x1b[35m here is the employees list - reference the ID #s when choosing which employee to update \x1b[0m");
+    // inquirer.prompt( 
+    //     {
+    //     type:'list',
+    //     message:'do you want to assign a manager to this new employee???',
+    //     choices: [ {value: "yes",}, {value: "no",}],
+    //     name: "hasManager"
+    // },).then((answers) => {
 };
+
 
 function getTable(table) { //just a quick show of the table
     connection.query(
@@ -268,3 +280,47 @@ function getTable(table) { //just a quick show of the table
         });
     return;
 };
+
+function chooseEmployee() {
+    let myEmployee;
+    connection.query("select CONCAT(first_name,' ',last_name) as name from employee", function(err,results,fields) {
+        inquirer.prompt(
+            {
+                type: 'list',
+                message: 'which employee you wanna update?',
+                choices: results, //options become the list of names returned from the query (so should always be a current list even when new employees have been added)
+                name: 'employeeName',
+            },).then((answers) => {
+                myEmployee = `${answers.employeeName}`;
+                myEmployeeSplit = myEmployee.split(' ');
+                console.log(myEmployeeSplit[0]);
+                //get the list of role titles as options to choose from
+                connection.query("select title as value from role", function(err,results,fields) {
+                    inquirer.prompt(
+                        {
+                            type: 'list',
+                            message: `what role would you like to assign ${myEmployee} to?`,
+                            choices: results,
+                            name: 'newRole',
+                        },).then((answers) => {
+                            // console.log(answers.newRole);
+                            //get the id of the role
+                            connection.query(`select id from role where title = '${answers.newRole}';`, function(err,results,fields) {
+                                console.log(results[0].id);
+                                console.log('that is the id')
+                                connection.query(`update employee set role_id = ${results[0].id} where first_name = '${myEmployeeSplit[0]};`, function(err,results,fields) {
+                                    // console.log(myEmployeeSplit[0]);
+                                    mainPrompt();
+                                });
+                                
+                            });
+                        })
+                    // console.log(results);
+                }); //ends inner query
+                
+            })  
+
+    });
+    // console.log(employee);
+    // return employee;
+}

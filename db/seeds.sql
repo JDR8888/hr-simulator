@@ -19,4 +19,4 @@ values
 insert into employee 
 (first_name, last_name, role_id)
 values
-("slithy", "tove", 3);
+("slithy", "tove", 3); 
