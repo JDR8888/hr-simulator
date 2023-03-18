@@ -282,7 +282,7 @@ function getTable(table) { //just a quick show of the table
 };
 
 function chooseEmployee() {
-    let myEmployee;
+    let myEmployee; // query all employees and return the set of full names that the user can choose from 
     connection.query("select CONCAT(first_name,' ',last_name) as name from employee", function(err,results,fields) {
         inquirer.prompt(
             {
@@ -292,8 +292,8 @@ function chooseEmployee() {
                 name: 'employeeName',
             },).then((answers) => {
                 myEmployee = `${answers.employeeName}`;
-                myEmployeeSplit = myEmployee.split(' ');
-                console.log(myEmployeeSplit[0]);
+                myEmployeeSplit = myEmployee.split(' '); 
+                myEmployeeSplit= myEmployeeSplit[0];
                 //get the list of role titles as options to choose from
                 connection.query("select title as value from role", function(err,results,fields) {
                     inquirer.prompt(
@@ -306,10 +306,7 @@ function chooseEmployee() {
                             // console.log(answers.newRole);
                             //get the id of the role
                             connection.query(`select id from role where title = '${answers.newRole}';`, function(err,results,fields) {
-                                console.log(results[0].id);
-                                console.log('that is the id')
-                                connection.query(`update employee set role_id = ${results[0].id} where first_name = '${myEmployeeSplit[0]};`, function(err,results,fields) {
-                                    // console.log(myEmployeeSplit[0]);
+                                connection.query(`update employee set role_id = ${results[0].id} where first_name = '${myEmployeeSplit[0]}';`, function(err,results,fields) {
                                     mainPrompt();
                                 });
                                 
