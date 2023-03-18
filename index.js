@@ -251,29 +251,14 @@ function addEmployee() {
             ).then((answers) => {
                 connection.query(
                     `insert into employee (first_name, last_name, role_id) values ("${answers.fname}","${answers.lname}", ${answers.role_id});`, function(err, results, fields) {
-                        console.log("\x1b[33m your new employee should be added. \x1b[0m")
+                        console.log("\x1b[33m your new employee should be added. \x1b[0m");
                         mainPrompt();
                 }); 
         })};
 });
 };
 
-function updateEmployee() {
-    employee = chooseEmployee();
-    // console.log('hi' + employee);
-    // getTable('employee');
-    // console.log("\x1b[35m here is the employees list - reference the ID #s when choosing which employee to update \x1b[0m");
-    // inquirer.prompt( 
-    //     {
-    //     type:'list',
-    //     message:'do you want to assign a manager to this new employee???',
-    //     choices: [ {value: "yes",}, {value: "no",}],
-    //     name: "hasManager"
-    // },).then((answers) => {
-};
-
-
-function getTable(table) { //just a quick show of the table
+function getTable(table) { //just a quick-n-dirty show of a table without formatting
     connection.query(
         `select * from ${table}`, function(err, results, fields) {
             console.table(results);
@@ -281,7 +266,7 @@ function getTable(table) { //just a quick show of the table
     return;
 };
 
-function chooseEmployee() {
+function updateEmployee() {
     let myEmployee; // query all employees and return the set of full names that the user can choose from 
     connection.query("select CONCAT(first_name,' ',last_name) as name from employee", function(err,results,fields) {
         inquirer.prompt(
@@ -293,31 +278,28 @@ function chooseEmployee() {
             },).then((answers) => {
                 myEmployee = `${answers.employeeName}`;
                 myEmployeeSplit = myEmployee.split(' '); 
-                myEmployeeSplit= myEmployeeSplit[0];
+                //giving the user the full name but splitting first and last names up for verifying which employee was chosen
                 //get the list of role titles as options to choose from
                 connection.query("select title as value from role", function(err,results,fields) {
-                    inquirer.prompt(
+                    //setting role.title as 'value' and the results will be an array of objects that can be used as prompt choices
+                    inquirer.prompt( 
                         {
                             type: 'list',
                             message: `what role would you like to assign ${myEmployee} to?`,
                             choices: results,
                             name: 'newRole',
                         },).then((answers) => {
-                            // console.log(answers.newRole);
-                            //get the id of the role
+                            //get the id of the role, to set employee.role_id as a number even though the user selected from titles
                             connection.query(`select id from role where title = '${answers.newRole}';`, function(err,results,fields) {
-                                connection.query(`update employee set role_id = ${results[0].id} where first_name = '${myEmployeeSplit[0]}';`, function(err,results,fields) {
+                                connection.query(`update employee set role_id = ${results[0].id} where first_name = '${myEmployeeSplit[0]}' and last_name = '${myEmployeeSplit[1]}';`, function(err,results,fields) {
+                                    console.log("\x1b[33m you managed to change an employee's role. good job i guess. \x1b[0m");
                                     mainPrompt();
                                 });
                                 
                             });
                         })
-                    // console.log(results);
-                }); //ends inner query
+                }); //
                 
             })  
-
     });
-    // console.log(employee);
-    // return employee;
 }
