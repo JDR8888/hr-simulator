@@ -1,4 +1,4 @@
-#  (Module 10 Challenge Columbia U)
+#  HR-Simulator (Module 12 Challenge Columbia U)
 [![forthebadge](https://forthebadge.com/images/badges/powered-by-coffee.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/uses-js.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/gluten-free.svg)](https://forthebadge.com) 
 
 ## Description
